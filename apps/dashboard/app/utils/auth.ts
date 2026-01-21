@@ -1,5 +1,3 @@
-import { createServerFn } from "@tanstack/start";
-
 export interface User {
   id: string;
   name?: string | null;
@@ -13,9 +11,10 @@ export interface Session {
 }
 
 /**
- * Server function to get the current session from the API
+ * Fetch the current session from the API
+ * This is a regular async function that can be called from loaders
  */
-export const getSession = createServerFn("GET", async () => {
+export async function getSession(): Promise<Session> {
   try {
     const response = await fetch("http://localhost:3500/auth/session", {
       credentials: "include",
@@ -34,4 +33,4 @@ export const getSession = createServerFn("GET", async () => {
     console.error("Failed to fetch session:", error);
     return { user: null };
   }
-});
+}
