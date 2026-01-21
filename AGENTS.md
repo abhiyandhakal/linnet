@@ -103,11 +103,11 @@ GEMINI_API_KEY=...
 ```
 1. User visits Landing Page (3501)
    ↓
-2. Clicks "Get Started" → Redirects to ${API_URL}/api/auth/signin/google (3500)
+2. Clicks "Get Started" → Redirects to ${API_URL}/auth/signin/google (3500)
    ↓
 3. Google OAuth consent screen
    ↓
-4. Callback to ${AUTH_URL}/api/auth/callback/google (3500)
+4. Callback to ${AUTH_URL}/auth/callback/google (3500)
    ↓
 5. Auth.js redirect callback triggers → Redirects to Dashboard (3502)
    ↓
