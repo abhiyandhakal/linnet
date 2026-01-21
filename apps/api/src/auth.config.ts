@@ -5,6 +5,7 @@ import { db } from "@linnet/db";
 
 export const authConfig: AuthConfig = {
   adapter: DrizzleAdapter(db),
+  secret: process.env.AUTH_SECRET,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
