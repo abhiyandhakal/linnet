@@ -81,7 +81,7 @@ function Home() {
       
       <div className="mt-8 text-center">
         <a 
-          href={`${apiUrl}/api/auth/signout`}
+          href={`${apiUrl}/auth/signout`}
           className="text-[var(--muted-ink)] hover:text-[var(--ink)] underline"
         >
           Sign out
