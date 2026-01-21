@@ -54,16 +54,18 @@ AI Personal Secretary built with:
 - [x] Google OAuth provider configured
 - [x] Environment variables set:
   - `AUTH_SECRET`
-  - `AUTH_URL=http://localhost:3501`
+  - `AUTH_URL=http://localhost:3500` (API server)
   - `GOOGLE_CLIENT_ID`
   - `GOOGLE_CLIENT_SECRET`
+  - `LANDING_URL=http://localhost:3501`
+  - `DASHBOARD_URL=http://localhost:3502`
 - [x] OAuth callbacks registered:
-  - `http://localhost:3501/api/auth/callback/google`
-  - `http://localhost:3502/api/auth/callback/google`
-
-### Pending
-- [ ] Session management integration with Drizzle adapter
-- [ ] Protected route middleware
+  - `http://localhost:3500/auth/callback/google`
+- [x] Session management with Drizzle adapter
+- [x] **OAuth flow verified end-to-end** (2026-01-21)
+  - Landing → Auth.js signin page → Google → Dashboard
+  - Session creation working
+  - Redirect callback working
 
 ---
 
@@ -75,25 +77,23 @@ AI Personal Secretary built with:
 - [x] Root route (`__root.tsx`) fixed
   - Issue: `Meta` and `Scripts` moved from `@tanstack/start` to `@tanstack/react-router`
   - Solution: Import `HeadContent` and `Scripts` from `@tanstack/react-router`
-- [x] Auth proxy route created (`/api/auth/$`)
-  - Forwards requests from port 3502 → 3500
+- [x] Session utility created (`utils/auth.ts`)
+  - `getSession()` function for checking authentication
+- [x] Protected home route
+  - Redirects to landing if not authenticated
+  - Shows user greeting if authenticated
 - [x] Build passing
 
 ### Route Structure
 ```
 app/routes/
 ├── __root.tsx (layout)
-├── index.tsx (dashboard home)
+├── index.tsx (protected dashboard home)
 ├── tasks/
 ├── events/
 ├── notes/
-└── api/auth/$.ts (proxy)
+└── utils/auth.ts (session management)
 ```
-
-### Pending
-- [ ] Implement dashboard UI
-- [ ] Session verification on load
-- [ ] Protected routes
 
 ---
 
@@ -166,7 +166,7 @@ app/routes/
 
 ## Current Blockers
 
-### 1. Landing Page CSS Error (HIGH PRIORITY)
+### 1. Landing Page CSS Error (FIXED ✅)
 **Error:**
 ```
 [postcss] @layer base is used but no matching @tailwind base directive is present
@@ -177,19 +177,29 @@ app/routes/
 - `@astrojs/tailwind` integration expects v3 directives
 - Conflict between v3 integration and v4 CSS-first approach
 
-**Solution:**
-1. Remove `@astrojs/tailwind` from `apps/landing/package.json`
-2. Remove from `astro.config.mjs`
-3. Add `@tailwindcss/vite` plugin directly
-4. Keep existing `global.css` with `@import "tailwindcss"`
+**Solution Applied:**
+1. ✅ Removed `@astrojs/tailwind` from `apps/landing/package.json`
+2. ✅ Removed from `astro.config.mjs`
+3. ✅ Added `@tailwindcss/postcss` plugin with `postcss.config.js`
+4. ✅ Kept existing `global.css` with `@import "tailwindcss"`
 
-### 2. Dashboard Client Export Warning (LOW PRIORITY)
-**Warning:**
+### 2. Auth.js OAuth Flow Issues (FIXED ✅)
+**Error:**
 ```
-"default" is not exported by "app/client.tsx"
+UnknownAction: Unsupported action
 ```
 
-**Action:** Check if `app/client.tsx` exists and has correct exports
+**Root Cause:**
+- `apps/api/.env` had outdated `AUTH_URL` (3501 instead of 3500)
+- Missing `LANDING_URL` and `DASHBOARD_URL` in API's .env
+- Landing page linking directly to `/auth/signin/google` instead of `/auth/signin`
+- Elysia prefix interfering with Auth.js path handling
+
+**Solution Applied:**
+1. ✅ Fixed `apps/api/.env` to match root `.env`
+2. ✅ Changed landing link to `/auth/signin` (not `/auth/signin/google`)
+3. ✅ Added `basePath: "/auth"` to Auth.js config
+4. ✅ Removed Elysia prefix to let Auth.js see full path
 
 ---
 
@@ -197,7 +207,13 @@ app/routes/
 
 1. ✅ Update environment variables
 2. ✅ Fix Dashboard build
-3. 🔄 Fix Landing page Tailwind v4 conflict
+3. ✅ Fix Landing page Tailwind v4 conflict
+4. ✅ Verify OAuth flow end-to-end
+5. 🔄 **Start Phase 4: Core Features**
+   - Implement dashboard navigation
+   - Build Tasks module UI
+   - Build Events module UI
+   - Build Notes module UI
 4. ⏳ Start dev server (`bun dev`)
 5. ⏳ Verify OAuth flow (3501 → API → 3502)
 6. ⏳ Implement dashboard UI
