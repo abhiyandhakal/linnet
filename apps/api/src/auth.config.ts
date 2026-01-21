@@ -14,6 +14,17 @@ export const authConfig: AuthConfig = {
     }),
   ],
   trustHost: true,
+  cookies: {
+    sessionToken: {
+      name: "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: false, // Set to true in production with HTTPS
+      },
+    },
+  },
   callbacks: {
     session({ session, user }) {
       if (session.user) {

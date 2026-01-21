@@ -17,6 +17,7 @@ export default eventHandler(async (event) => {
     history: memoryHistory,
     context: {
       head: '',
+      request: event.node.req, // Pass the Node.js request object
     },
   })
 

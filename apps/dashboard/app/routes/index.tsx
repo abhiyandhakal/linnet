@@ -1,14 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { getSession } from '../utils/auth'
+import { getSession, type User } from '../utils/auth'
 import { useEffect, useState } from 'react'
 import { DashboardLayout } from '../components/DashboardLayout'
 
 export const Route = createFileRoute('/')({
   component: Home,
-  loader: async () => {
-    const session = await getSession()
-    return { session }
-  }
 })
 
 interface DailyBriefing {
@@ -19,18 +15,29 @@ interface DailyBriefing {
 }
 
 function Home() {
-  const { session } = Route.useLoaderData()
+  const [session, setSession] = useState<{ user: User | null } | null>(null)
+  const [loading, setLoading] = useState(true)
   const userName = session?.user?.name?.split(' ')[0] || 'there'
   const [briefing, setBriefing] = useState<DailyBriefing | null>(null)
   const [loadingBriefing, setLoadingBriefing] = useState(true)
   
+  // Fetch session client-side
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSession()
+      setSession(sessionData)
+      setLoading(false)
+    }
+    fetchSession()
+  }, [])
+  
   // Redirect to auth signin if not authenticated
   useEffect(() => {
-    if (!session?.user) {
+    if (!loading && !session?.user) {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
       window.location.href = `${apiUrl}/auth/signin`
     }
-  }, [session])
+  }, [loading, session])
   
   // Fetch daily briefing
   useEffect(() => {
@@ -57,8 +64,8 @@ function Home() {
     fetchBriefing()
   }, [session?.user?.id])
   
-  // Show loading while redirecting
-  if (!session?.user) {
+  // Show loading while checking authentication
+  if (loading || !session?.user) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <div className="text-center text-[var(--muted-ink)]">Redirecting to sign in...</div>
