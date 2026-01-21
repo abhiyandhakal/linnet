@@ -376,32 +376,28 @@ See `PROGRESS.md` for detailed phase-by-phase progress.
 - Authenticated home page with greeting
 - ✅ **OAuth Flow Verified** - Full authentication working end-to-end
 
-### 🚧 In Progress
-
 **Phase 4: Core Features**
-- Tasks Module UI
-- Events Module UI
-- Notes Module UI
+- Tasks Module UI with full CRUD operations
+- Events Module UI with full CRUD operations
+- Notes Module UI with full CRUD operations
+- Dashboard navigation and layout
+- All API endpoints implemented and working
+
+**Phase 5: AI Integration**
+- Gemini client setup in `packages/logic`
+- Natural language parsing for tasks/events
+- Daily briefing generation with AI summaries
+- AI-powered form population
+
+**Phase 6: Vector Search**
+- Embedding generation pipeline with Gemini text-embedding-004
+- Semantic search for notes using pgvector
+- Search mode toggle (text/semantic) in UI
+- Automatic embedding management on create/update
 
 ### 📋 Pending Phases
 
-**Phase 4: Core Features**
-- Tasks Module UI
-- Events Module UI
-- Notes Module UI
-
-**Phase 5: AI Integration**
-- Gemini client setup
-- Natural language parsing
-- Daily briefing generation
-
-**Phase 6: Vector Search**
-- Embedding pipeline
-- Semantic search
-
 **Phase 7-9: Testing, Deployment, Docs**
-
----
 
 ## Common Tasks for AI Agents
 
