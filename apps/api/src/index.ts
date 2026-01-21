@@ -4,7 +4,10 @@ import { authRoutes } from "./routes/auth";
 
 const app = new Elysia()
   .use(cors({
-    origin: ["http://localhost:3501", "http://localhost:3502"],
+    origin: [
+      process.env.LANDING_URL || "http://localhost:3501",
+      process.env.DASHBOARD_URL || "http://localhost:3502"
+    ],
     credentials: true,
   }))
   .use(authRoutes)

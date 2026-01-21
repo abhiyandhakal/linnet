@@ -1,18 +1,11 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { getSession } from '../utils/auth'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/')({
   component: Home,
   loader: async () => {
     const session = await getSession()
-    
-    // Redirect to signin if not authenticated
-    if (!session.user) {
-      throw redirect({
-        to: 'http://localhost:3500/api/auth/signin/google',
-      })
-    }
-    
     return { session }
   }
 })
@@ -21,9 +14,28 @@ function Home() {
   const { session } = Route.useLoaderData()
   const userName = session.user?.name?.split(' ')[0] || 'there'
   
+  // Redirect to landing page if not authenticated
+  useEffect(() => {
+    if (!session.user) {
+      const landingUrl = import.meta.env.VITE_LANDING_URL || 'http://localhost:3501'
+      window.location.href = landingUrl
+    }
+  }, [session.user])
+  
+  // Show loading while redirecting
+  if (!session.user) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="text-center text-[var(--muted-ink)]">Redirecting to sign in...</div>
+      </div>
+    )
+  }
+  
   // Get current time for greeting
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+  
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
   
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -69,7 +81,7 @@ function Home() {
       
       <div className="mt-8 text-center">
         <a 
-          href="http://localhost:3500/api/auth/signout"
+          href={`${apiUrl}/api/auth/signout`}
           className="text-[var(--muted-ink)] hover:text-[var(--ink)] underline"
         >
           Sign out

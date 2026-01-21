@@ -16,7 +16,8 @@ export interface Session {
  */
 export async function getSession(): Promise<Session> {
   try {
-    const response = await fetch("http://localhost:3500/auth/session", {
+    const apiUrl = process.env.VITE_API_URL || "http://localhost:3500";
+    const response = await fetch(`${apiUrl}/auth/session`, {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",

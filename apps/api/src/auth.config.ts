@@ -23,12 +23,28 @@ export const authConfig: AuthConfig = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // After successful signin, redirect to dashboard
-      if (url.startsWith("/")) return `http://localhost:3502${url}`;
+      const dashboardUrl = process.env.DASHBOARD_URL || "http://localhost:3502";
+      const landingUrl = process.env.LANDING_URL || "http://localhost:3501";
+      
+      // After successful signin from landing page, redirect to dashboard
+      
+      // If the URL is relative, make it absolute with dashboard URL
+      if (url.startsWith("/")) {
+        return `${dashboardUrl}${url}`;
+      }
+      
       // If callback URL is already absolute and from our dashboard, allow it
-      if (url.startsWith("http://localhost:3502")) return url;
-      // Otherwise, redirect to dashboard home
-      return "http://localhost:3502";
+      if (url.startsWith(dashboardUrl)) {
+        return url;
+      }
+      
+      // If callback is to landing page, redirect to dashboard instead
+      if (url.startsWith(landingUrl)) {
+        return dashboardUrl;
+      }
+      
+      // Default: redirect to dashboard home
+      return dashboardUrl;
     },
   },
 };
