@@ -175,25 +175,67 @@ app/routes/
 
 ---
 
-## Phase 5: AI Integration (PENDING)
+## Phase 5: AI Integration ✅
 
-### Gemini API Setup
-- [ ] Configure Gemini client (`GEMINI_API_KEY` set)
-- [ ] Implement in `packages/logic`
+### Gemini API Setup ✅
+- [x] Configure Gemini client (`GEMINI_API_KEY` set)
+- [x] Implement in `packages/logic`
 
-### AI Features
-- [ ] Natural language → structured data
-- [ ] Daily briefing generation
-- [ ] Smart suggestions
+### AI Features ✅
+- [x] Natural language → structured data
+  - Task parsing: `POST /ai/parse-task`
+  - Event parsing: `POST /ai/parse-event`
+  - Integrated into create forms with "Quick Create with AI" sections
+- [x] Daily briefing generation (`GET /ai/briefing`)
+  - AI-generated day summary
+  - Prioritized task list
+  - Today's schedule
+  - Smart suggestions
+  - Displayed on dashboard home page
+- [x] AI-powered form population
+  - Users can type natural language descriptions
+  - AI extracts structured data (title, dates, priority, etc.)
+  - Form fields auto-populate for easy editing
+
+### Commit
+- `32d21a1` - "feat(ai): implement Phase 5 - AI integration with Gemini"
 
 ---
 
-## Phase 6: Vector Search (PENDING)
+## Phase 6: Vector Search ✅
 
-### pgvector Integration
-- [ ] Embedding generation pipeline
-- [ ] Semantic search for notes
-- [ ] Similar task detection
+### pgvector Integration ✅
+- [x] Embedding generation pipeline (`packages/logic/src/embeddings.ts`)
+  - Using Gemini `text-embedding-004` model (768 dimensions)
+  - Generates embeddings on note create/update
+  - Stored in `embeddings` table with pgvector support
+- [x] Semantic search for notes (`GET /ai/search-notes`)
+  - Cosine distance similarity search using pgvector
+  - Returns notes ranked by similarity score
+  - Supports natural language queries
+- [x] Search mode toggle in notes UI
+  - Text search (keyword matching)
+  - Semantic search (meaning-based, AI-powered)
+  - Displays similarity scores as "% match" in semantic mode
+- [x] Automatic embedding management
+  - Embeddings generated asynchronously (non-blocking)
+  - Old embeddings deleted on note update
+  - New embeddings created automatically
+
+### Features Implemented
+- ✅ Embedding generation with task type support (RETRIEVAL_DOCUMENT, RETRIEVAL_QUERY)
+- ✅ Pgvector cosine distance search (`<=>` operator)
+- ✅ Similarity scoring (0-100% match display)
+- ✅ UI toggle between text and semantic search modes
+- ✅ Automatic embedding cleanup on note updates
+
+### Known Limitations
+- [ ] No embedding deletion cascade when notes are deleted
+- [ ] No batch embedding generation (could optimize performance)
+- [ ] No background job queue (embeddings generated synchronously in promise)
+
+### Commit
+- `96faa12` - "feat(vector): implement Phase 6 - semantic search with pgvector"
 
 ---
 
@@ -272,14 +314,15 @@ UnknownAction: Unsupported action
    - ✅ Build Tasks module UI with full CRUD
    - ✅ Build Events module UI with full CRUD
    - ✅ Build Notes module UI with full CRUD
-6. 🔄 **Start Phase 5: AI Integration**
-   - Set up Gemini client in `packages/logic`
-   - Implement natural language parsing for tasks/events
-   - Generate daily briefings
-   - Add smart suggestions
-7. ⏳ **Phase 6: Vector Search**
-   - Implement embedding generation
-   - Add semantic search for notes
+6. ✅ **Complete Phase 5: AI Integration**
+   - ✅ Set up Gemini client in `packages/logic`
+   - ✅ Implement natural language parsing for tasks/events
+   - ✅ Generate daily briefings
+   - ✅ Add AI-powered form population
+7. ✅ **Complete Phase 6: Vector Search**
+   - ✅ Implement embedding generation
+   - ✅ Add semantic search for notes with pgvector
+   - ✅ Build search mode toggle UI
 8. ⏳ **Phase 7: Testing**
    - E2E tests for OAuth flow
    - API endpoint tests
@@ -289,9 +332,12 @@ UnknownAction: Unsupported action
 
 ## Git Commits Log
 
+- `96faa12` - "feat(vector): implement Phase 6 - semantic search with pgvector" (2026-01-21)
+- `32d21a1` - "feat(ai): implement Phase 5 - AI integration with Gemini" (2026-01-21)
+- `ab16bb3` - "feat(dashboard): add complete CRUD for notes with detail/edit pages" (2026-01-21)
+- `bf7f6dd` - "feat(events): implement events module with CRUD API and UI" (2026-01-21)
 - `feat(dashboard): add complete CRUD for tasks, events, and notes` (2026-01-21)
 - `feat(dashboard): add navigation sidebar and dashboard layout` (2026-01-21)
-- `feat(events): implement events module with CRUD API and UI` (2026-01-21)
 - `feat(tasks): implement tasks module with CRUD API and UI` (2026-01-21)
 - `docs(root): update PROGRESS.md to reflect completed OAuth flow` (2026-01-21)
 - `docs(root): update AGENTS.md with OAuth flow fix details` (2026-01-21)
@@ -303,4 +349,4 @@ UnknownAction: Unsupported action
 ---
 
 **Last Updated:** 2026-01-21
-**Current Phase:** Phase 4 (Core Features) ✅ → Phase 5 (AI Integration) 🔄
+**Current Phase:** Phase 6 (Vector Search) ✅ → Phase 7 (Testing) ⏳
