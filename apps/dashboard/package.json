@@ -1,0 +1,29 @@
+{
+  "name": "dashboard",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev --config app.config.ts --port 3501",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/start": "1.120.20",
+    "@tanstack/react-router": "1.120.20",
+    "@tanstack/router-generator": "1.120.20",
+    "@tanstack/start-config": "1.120.20",
+    "@tanstack/router-plugin": "1.120.20",
+    "vinxi": "0.5.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@linnet/ui": "workspace:*",
+    "@linnet/api-client": "workspace:*",
+    "@linnet/logic": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.0"
+  }
+}

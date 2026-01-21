@@ -1,0 +1,22 @@
+{
+  "name": "linnet-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun --filter \"*\" dev",
+    "build": "bun --filter \"*\" build",
+    "typecheck": "bun --filter \"*\" typecheck"
+  },
+  "devDependencies": {
+    "@tanstack/router-generator": "1.120.20",
+    "typescript": "^5.3.3"
+  },
+  "resolutions": {
+    "@tanstack/server-functions-plugin": "1.120.17",
+    "@tanstack/start-plugin-core": "1.120.17",
+    "@tanstack/react-start-plugin": "1.120.17"
+  }
+}

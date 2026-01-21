@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vinxi/types/client"]
+  },
+  "include": ["app", "app.config.ts"]
+}
