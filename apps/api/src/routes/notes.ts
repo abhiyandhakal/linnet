@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
-import { db, notes } from "@linnet/db";
-import { eq, desc, and, like, or } from "drizzle-orm";
+import { db, notes, embeddings } from "@linnet/db";
+import { eq, desc, and, like, or, sql } from "drizzle-orm";
+import { generateEmbedding } from "@linnet/logic";
 
 export const notesRoutes = new Elysia({ prefix: "/notes" })
   // Get all notes for the authenticated user
@@ -87,8 +88,24 @@ export const notesRoutes = new Elysia({ prefix: "/notes" })
         tags: tags || [],
       })
       .returning();
+    
+    // Generate and store embedding asynchronously (don't block response)
+    const note = newNote[0];
+    generateEmbedding(`${title}\n\n${content}`, 'RETRIEVAL_DOCUMENT')
+      .then(async (embeddingVector) => {
+        await db.insert(embeddings).values({
+          userId,
+          entityType: 'note',
+          entityId: note.id,
+          content: `${title}\n\n${content}`,
+          embedding: embeddingVector, // Pass as number array
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to generate embedding:', error);
+      });
       
-    return { note: newNote[0] };
+    return { note };
   }, {
     body: t.Object({
       userId: t.String(),
@@ -122,7 +139,33 @@ export const notesRoutes = new Elysia({ prefix: "/notes" })
       return { error: "Note not found" };
     }
     
-    return { note: updatedNote[0] };
+    const note = updatedNote[0];
+    
+    // Regenerate embedding if title or content changed
+    if (title || content !== undefined) {
+      generateEmbedding(`${note.title}\n\n${note.content}`, 'RETRIEVAL_DOCUMENT')
+        .then(async (embeddingVector) => {
+          // Delete old embedding and create new one
+          await db.delete(embeddings)
+            .where(and(
+              eq(embeddings.entityType, 'note'),
+              eq(embeddings.entityId, id)
+            ));
+          
+          await db.insert(embeddings).values({
+            userId,
+            entityType: 'note',
+            entityId: id,
+            content: `${note.title}\n\n${note.content}`,
+            embedding: embeddingVector, // Pass as number array
+          });
+        })
+        .catch((error) => {
+          console.error('Failed to regenerate embedding:', error);
+        });
+    }
+    
+    return { note };
   }, {
     body: t.Object({
       userId: t.String(),

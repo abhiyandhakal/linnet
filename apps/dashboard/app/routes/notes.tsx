@@ -18,6 +18,7 @@ interface Note {
   tags: string[]
   createdAt: string
   updatedAt: string
+  similarity?: number
 }
 
 function NotesPage() {
@@ -26,6 +27,7 @@ function NotesPage() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [searchMode, setSearchMode] = useState<'text' | 'semantic'>('text')
   
   useEffect(() => {
     if (!session.user?.id) {
@@ -35,7 +37,7 @@ function NotesPage() {
     }
     
     fetchNotes()
-  }, [session.user?.id, debouncedSearch])
+  }, [session.user?.id, debouncedSearch, searchMode])
   
   // Debounce search
   useEffect(() => {
@@ -50,8 +52,18 @@ function NotesPage() {
     setLoading(true)
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
-      const searchParam = debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ''
-      const response = await fetch(`${apiUrl}/notes?userId=${session.user?.id}${searchParam}`, {
+      
+      let url: string
+      if (debouncedSearch && searchMode === 'semantic') {
+        // Use semantic search
+        url = `${apiUrl}/ai/search-notes?userId=${session.user?.id}&query=${encodeURIComponent(debouncedSearch)}`
+      } else {
+        // Use text search (default)
+        const searchParam = debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ''
+        url = `${apiUrl}/notes?userId=${session.user?.id}${searchParam}`
+      }
+      
+      const response = await fetch(url, {
         credentials: 'include',
       })
       const data = await response.json()
@@ -95,11 +107,39 @@ function NotesPage() {
         </div>
         
         <div className="mb-6">
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={() => setSearchMode('text')}
+              className={`px-4 py-2 rounded-lg border transition-all ${
+                searchMode === 'text'
+                  ? 'bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]'
+                  : 'bg-white/50 text-[var(--ink)] border-[var(--border)] hover:border-[var(--ink)]'
+              }`}
+            >
+              Text Search
+            </button>
+            <button
+              onClick={() => setSearchMode('semantic')}
+              className={`px-4 py-2 rounded-lg border transition-all ${
+                searchMode === 'semantic'
+                  ? 'bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]'
+                  : 'bg-white/50 text-[var(--ink)] border-[var(--border)] hover:border-[var(--ink)]'
+              }`}
+            >
+              Semantic Search
+            </button>
+            {searchMode === 'semantic' && (
+              <span className="text-sm text-[var(--muted-ink)] self-center">
+                AI-powered similarity search
+              </span>
+            )}
+          </div>
+          
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search notes..."
+            placeholder={searchMode === 'semantic' ? 'Describe what you\'re looking for...' : 'Search notes...'}
             className="w-full px-4 py-3 border border-[var(--border)] rounded-lg bg-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--ink)]"
           />
         </div>
@@ -132,9 +172,16 @@ function NotesPage() {
               >
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <h3 className="text-xl font-medium flex-1">{note.title}</h3>
-                  <span className="text-sm text-[var(--muted-ink)]">
-                    {formatDate(note.updatedAt)}
-                  </span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="text-sm text-[var(--muted-ink)]">
+                      {formatDate(note.updatedAt)}
+                    </span>
+                    {searchMode === 'semantic' && note.similarity !== undefined && (
+                      <span className="text-xs text-[var(--red-pen)] font-medium">
+                        {(note.similarity * 100).toFixed(0)}% match
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
                 <p className="text-[var(--muted-ink)] mb-3">

@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
-import { parseTaskFromText, parseEventFromText, generateDailyBriefing } from '@linnet/logic';
-import { db, tasks, events, notes } from '@linnet/db';
-import { eq, and, gte } from 'drizzle-orm';
+import { parseTaskFromText, parseEventFromText, generateDailyBriefing, generateEmbedding } from '@linnet/logic';
+import { db, tasks, events, notes, embeddings } from '@linnet/db';
+import { eq, and, gte, sql, inArray } from 'drizzle-orm';
 
 export const aiRoutes = new Elysia({ prefix: '/ai' })
   // Parse task from natural language
@@ -135,5 +135,79 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
   }, {
     query: t.Object({
       userId: t.String(),
+    }),
+  })
+  
+  // Semantic search for notes using vector embeddings
+  .get('/search-notes', async ({ query }) => {
+    try {
+      const { userId, query: searchQuery, limit: limitStr } = query;
+      
+      if (!userId || !searchQuery) {
+        return { error: 'userId and query are required' };
+      }
+      
+      const limit = limitStr ? parseInt(limitStr, 10) : 10;
+      
+      // Generate embedding for the search query
+      const queryEmbedding = await generateEmbedding(searchQuery, 'RETRIEVAL_QUERY');
+      
+      // Convert embedding array to vector string format for pgvector
+      const vectorString = `[${queryEmbedding.join(',')}]`;
+      
+      // Use pgvector's cosine distance operator (<=>)
+      // Lower distance = more similar, so we compute 1 - distance to get similarity score
+      const results = await db
+        .select({
+          noteId: embeddings.entityId,
+          similarity: sql<number>`1 - (${embeddings.embedding} <=> ${vectorString}::vector)`,
+          content: embeddings.content,
+        })
+        .from(embeddings)
+        .where(
+          and(
+            eq(embeddings.userId, userId),
+            eq(embeddings.entityType, 'note')
+          )
+        )
+        .orderBy(sql`${embeddings.embedding} <=> ${vectorString}::vector ASC`)
+        .limit(limit);
+      
+      // Fetch the actual notes
+      if (results.length === 0) {
+        return { notes: [], scores: [] };
+      }
+      
+      const noteIds = results.map(r => r.noteId);
+      const userNotes = await db
+        .select()
+        .from(notes)
+        .where(inArray(notes.id, noteIds));
+      
+      // Map notes with their similarity scores
+      const notesWithScores = userNotes.map(note => {
+        const result = results.find(r => r.noteId === note.id);
+        return {
+          ...note,
+          similarity: result?.similarity || 0,
+        };
+      });
+      
+      // Sort by similarity (highest first)
+      notesWithScores.sort((a, b) => b.similarity - a.similarity);
+      
+      return { 
+        notes: notesWithScores,
+        query: searchQuery,
+      };
+    } catch (error) {
+      console.error('Error performing semantic search:', error);
+      return { error: 'Failed to perform semantic search', details: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  }, {
+    query: t.Object({
+      userId: t.String(),
+      query: t.String(),
+      limit: t.Optional(t.String()),
     }),
   });

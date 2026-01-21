@@ -7,3 +7,6 @@ export { parseEventFromText, ParsedEventSchema, type ParsedEvent } from './parse
 
 // Daily briefing
 export { generateDailyBriefing, type BriefingData, type DailyBriefing } from './briefing';
+
+// Embeddings
+export { generateEmbedding, cosineSimilarity } from './embeddings';
