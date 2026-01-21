@@ -20,26 +20,26 @@ interface DailyBriefing {
 
 function Home() {
   const { session } = Route.useLoaderData()
-  const userName = session.user?.name?.split(' ')[0] || 'there'
+  const userName = session?.user?.name?.split(' ')[0] || 'there'
   const [briefing, setBriefing] = useState<DailyBriefing | null>(null)
   const [loadingBriefing, setLoadingBriefing] = useState(true)
   
-  // Redirect to landing page if not authenticated
+  // Redirect to auth signin if not authenticated
   useEffect(() => {
-    if (!session.user) {
-      const landingUrl = import.meta.env.VITE_LANDING_URL || 'http://localhost:3501'
-      window.location.href = landingUrl
+    if (!session?.user) {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
+      window.location.href = `${apiUrl}/auth/signin`
     }
-  }, [session.user])
+  }, [session])
   
   // Fetch daily briefing
   useEffect(() => {
-    if (!session.user?.id) return
+    if (!session?.user?.id) return
     
     const fetchBriefing = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
-        const response = await fetch(`${apiUrl}/ai/briefing?userId=${session.user?.id}`, {
+        const response = await fetch(`${apiUrl}/ai/briefing?userId=${session?.user?.id}`, {
           credentials: 'include',
         })
         
@@ -55,10 +55,10 @@ function Home() {
     }
     
     fetchBriefing()
-  }, [session.user?.id])
+  }, [session?.user?.id])
   
   // Show loading while redirecting
-  if (!session.user) {
+  if (!session?.user) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <div className="text-center text-[var(--muted-ink)]">Redirecting to sign in...</div>
