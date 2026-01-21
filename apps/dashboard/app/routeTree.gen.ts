@@ -12,14 +12,22 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TasksImport } from './routes/tasks'
+import { Route as EventsImport } from './routes/events'
 import { Route as IndexImport } from './routes/index'
 import { Route as TasksNewImport } from './routes/tasks.new'
+import { Route as EventsNewImport } from './routes/events.new'
 
 // Create/Update Routes
 
 const TasksRoute = TasksImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EventsRoute = EventsImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -35,6 +43,12 @@ const TasksNewRoute = TasksNewImport.update({
   getParentRoute: () => TasksRoute,
 } as any)
 
+const EventsNewRoute = EventsNewImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => EventsRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -46,12 +60,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsImport
+      parentRoute: typeof rootRoute
+    }
     '/tasks': {
       id: '/tasks'
       path: '/tasks'
       fullPath: '/tasks'
       preLoaderRoute: typeof TasksImport
       parentRoute: typeof rootRoute
+    }
+    '/events/new': {
+      id: '/events/new'
+      path: '/new'
+      fullPath: '/events/new'
+      preLoaderRoute: typeof EventsNewImport
+      parentRoute: typeof EventsImport
     }
     '/tasks/new': {
       id: '/tasks/new'
@@ -65,6 +93,17 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface EventsRouteChildren {
+  EventsNewRoute: typeof EventsNewRoute
+}
+
+const EventsRouteChildren: EventsRouteChildren = {
+  EventsNewRoute: EventsNewRoute,
+}
+
+const EventsRouteWithChildren =
+  EventsRoute._addFileChildren(EventsRouteChildren)
+
 interface TasksRouteChildren {
   TasksNewRoute: typeof TasksNewRoute
 }
@@ -77,39 +116,47 @@ const TasksRouteWithChildren = TasksRoute._addFileChildren(TasksRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/events': typeof EventsRouteWithChildren
   '/tasks': typeof TasksRouteWithChildren
+  '/events/new': typeof EventsNewRoute
   '/tasks/new': typeof TasksNewRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/events': typeof EventsRouteWithChildren
   '/tasks': typeof TasksRouteWithChildren
+  '/events/new': typeof EventsNewRoute
   '/tasks/new': typeof TasksNewRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/events': typeof EventsRouteWithChildren
   '/tasks': typeof TasksRouteWithChildren
+  '/events/new': typeof EventsNewRoute
   '/tasks/new': typeof TasksNewRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tasks' | '/tasks/new'
+  fullPaths: '/' | '/events' | '/tasks' | '/events/new' | '/tasks/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tasks' | '/tasks/new'
-  id: '__root__' | '/' | '/tasks' | '/tasks/new'
+  to: '/' | '/events' | '/tasks' | '/events/new' | '/tasks/new'
+  id: '__root__' | '/' | '/events' | '/tasks' | '/events/new' | '/tasks/new'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EventsRoute: typeof EventsRouteWithChildren
   TasksRoute: typeof TasksRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EventsRoute: EventsRouteWithChildren,
   TasksRoute: TasksRouteWithChildren,
 }
 
@@ -124,17 +171,28 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/events",
         "/tasks"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/events": {
+      "filePath": "events.tsx",
+      "children": [
+        "/events/new"
+      ]
+    },
     "/tasks": {
       "filePath": "tasks.tsx",
       "children": [
         "/tasks/new"
       ]
+    },
+    "/events/new": {
+      "filePath": "events.new.tsx",
+      "parent": "/events"
     },
     "/tasks/new": {
       "filePath": "tasks.new.tsx",
