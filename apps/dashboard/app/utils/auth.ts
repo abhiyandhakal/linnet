@@ -12,23 +12,17 @@ export interface Session {
 
 /**
  * Fetch the current session from the API
- * This is a regular async function that can be called from loaders
- * 
- * @param headers - Optional headers to forward (e.g., cookies from server-side request)
+ * Cookies with domain=localhost will be shared across all ports
  */
-export async function getSession(headers?: HeadersInit): Promise<Session> {
+export async function getSession(): Promise<Session> {
   try {
     const apiUrl = process.env.VITE_API_URL || "http://localhost:3500";
     
-    // Build headers object
-    const fetchHeaders: HeadersInit = {
-      "Content-Type": "application/json",
-      ...(headers || {}),
-    };
-    
     const response = await fetch(`${apiUrl}/auth/session`, {
       credentials: "include",
-      headers: fetchHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (!response.ok) {

@@ -22,6 +22,7 @@ export const authConfig: AuthConfig = {
         sameSite: "lax",
         path: "/",
         secure: false, // Set to true in production with HTTPS
+        domain: "localhost", // Share cookies across all localhost ports
       },
     },
   },
