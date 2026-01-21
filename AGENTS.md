@@ -80,7 +80,7 @@ DATABASE_URL=postgresql://...
 
 # Auth.js
 AUTH_SECRET=...
-AUTH_URL=http://localhost:3501
+AUTH_URL=http://localhost:3500
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 
@@ -90,7 +90,7 @@ GEMINI_API_KEY=...
 
 ### Important Notes:
 - **NEVER hardcode URLs** - always use environment variables
-- `AUTH_URL` is set to the landing page (3501) for OAuth callbacks
+- `AUTH_URL` is set to the API server (3500) where Auth.js runs
 - Dashboard uses `VITE_*` prefixed variables (accessible in browser)
 - API uses unprefixed variables (server-side only)
 
@@ -103,11 +103,11 @@ GEMINI_API_KEY=...
 ```
 1. User visits Landing Page (3501)
    ↓
-2. Clicks "Get Started" → Redirects to ${API_URL}/api/auth/signin/google
+2. Clicks "Get Started" → Redirects to ${API_URL}/api/auth/signin/google (3500)
    ↓
 3. Google OAuth consent screen
    ↓
-4. Callback to ${AUTH_URL}/api/auth/callback/google (3501)
+4. Callback to ${AUTH_URL}/api/auth/callback/google (3500)
    ↓
 5. Auth.js redirect callback triggers → Redirects to Dashboard (3502)
    ↓
