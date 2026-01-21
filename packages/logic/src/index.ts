@@ -1,7 +1,9 @@
-import { z } from 'zod';
+// Gemini AI client
+export { getGeminiClient, getModel } from './gemini';
 
-export const exampleSchema = z.object({
-  message: z.string(),
-});
+// Parsers
+export { parseTaskFromText, ParsedTaskSchema, type ParsedTask } from './parsers/task';
+export { parseEventFromText, ParsedEventSchema, type ParsedEvent } from './parsers/event';
 
-export type Example = z.infer<typeof exampleSchema>;
+// Daily briefing
+export { generateDailyBriefing, type BriefingData, type DailyBriefing } from './briefing';

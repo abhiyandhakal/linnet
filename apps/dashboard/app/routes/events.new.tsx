@@ -15,7 +15,9 @@ function NewEventPage() {
   const { session } = Route.useLoaderData()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [parsing, setParsing] = useState(false)
   const [error, setError] = useState('')
+  const [quickInput, setQuickInput] = useState('')
   
   // Get today's date in YYYY-MM-DD format for the date input
   const today = new Date().toISOString().split('T')[0]
@@ -29,6 +31,50 @@ function NewEventPage() {
     location: '',
     attendees: '',
   })
+  
+  const handleParseQuickInput = async () => {
+    if (!quickInput.trim()) return
+    
+    setParsing(true)
+    setError('')
+    
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
+      const response = await fetch(`${apiUrl}/ai/parse-event`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ text: quickInput }),
+      })
+      
+      const data = await response.json()
+      
+      if (data.error) {
+        setError(data.error)
+      } else if (data.event) {
+        // Parse ISO datetime to date and time components
+        const startDate = new Date(data.event.startTime)
+        const endDate = new Date(data.event.endTime)
+        
+        setFormData({
+          title: data.event.title || '',
+          description: data.event.description || '',
+          date: startDate.toISOString().split('T')[0],
+          startTime: startDate.toTimeString().slice(0, 5),
+          endTime: endDate.toTimeString().slice(0, 5),
+          location: data.event.location || '',
+          attendees: data.event.attendees ? data.event.attendees.join(', ') : '',
+        })
+        setQuickInput('') // Clear quick input after parsing
+      }
+    } catch (err) {
+      setError('Failed to parse event')
+    } finally {
+      setParsing(false)
+    }
+  }
   
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -89,6 +135,36 @@ function NewEventPage() {
     <DashboardLayout>
       <div className="p-8 max-w-2xl mx-auto">
         <h1 className="text-4xl mb-8">Create New Event</h1>
+        
+        {/* AI Quick Input */}
+        <div className="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+          <h2 className="text-lg font-medium mb-3 flex items-center gap-2">
+            <span>✨</span>
+            <span>Quick Create with AI</span>
+          </h2>
+          <p className="text-sm text-[var(--muted-ink)] mb-4">
+            Describe your event naturally, e.g., "Meeting with John tomorrow at 3pm" or "Team standup every day at 9am for 15 minutes"
+          </p>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={quickInput}
+              onChange={(e) => setQuickInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleParseQuickInput()}
+              className="flex-1 px-4 py-3 border border-[var(--border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Describe your event..."
+              disabled={parsing}
+            />
+            <button
+              type="button"
+              onClick={handleParseQuickInput}
+              disabled={parsing || !quickInput.trim()}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              {parsing ? 'Parsing...' : 'Parse'}
+            </button>
+          </div>
+        </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
