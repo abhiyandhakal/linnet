@@ -103,19 +103,25 @@ GEMINI_API_KEY=...
 ```
 1. User visits Landing Page (3501)
    ↓
-2. Clicks "Get Started" → Redirects to ${API_URL}/auth/signin/google (3500)
+2. Clicks "Get Started" → Redirects to ${API_URL}/auth/signin (3500)
    ↓
-3. Google OAuth consent screen
+3. Auth.js shows signin page with "Sign in with Google" button
    ↓
-4. Callback to ${AUTH_URL}/auth/callback/google (3500)
+4. User clicks button → POST to ${API_URL}/auth/signin/google with CSRF token
    ↓
-5. Auth.js redirect callback triggers → Redirects to Dashboard (3502)
+5. Auth.js redirects to Google OAuth consent screen
    ↓
-6. Dashboard checks session via ${API_URL}/auth/session
+6. User authorizes → Callback to ${AUTH_URL}/auth/callback/google (3500)
    ↓
-7. If authenticated: Show dashboard home
+7. Auth.js creates session in DB and redirects to Dashboard (3502)
+   ↓
+8. Dashboard checks session via ${API_URL}/auth/session
+   ↓
+9. If authenticated: Show dashboard home
    If not authenticated: Redirect to Landing (3501)
 ```
+
+**IMPORTANT:** The landing page must link to `/auth/signin`, NOT `/auth/signin/google`. Auth.js requires a CSRF-protected form submission, which is handled by the signin page.
 
 ### Key Files
 
@@ -123,10 +129,12 @@ GEMINI_API_KEY=...
 - `auth.config.ts`: Auth.js v5 configuration
   - Google OAuth provider
   - Drizzle adapter for session persistence
+  - `basePath: "/auth"` - tells Auth.js its base path
   - Redirect callback (sends users to dashboard after signin)
 - `routes/auth.ts`: Auth endpoints
-  - `/auth/*` - Catch-all for Auth.js routes
-  - `/auth/session` - Session check endpoint
+  - `/auth/*` - Catch-all for ALL Auth.js routes
+  - Auth.js internally handles: `/auth/signin`, `/auth/signin/google`, `/auth/callback/google`, `/auth/session`, etc.
+- `.env`: **MUST** contain correct environment variables (see Environment Variables section)
 
 **Dashboard (apps/dashboard/app/):**
 - `utils/auth.ts`: Session utility
@@ -249,6 +257,50 @@ export async function getSession(): Promise<Session> {
 }
 ```
 
+### 4. Auth.js OAuth Flow Issues (FIXED)
+
+**Problem:** Getting `UnknownAction` error when trying to sign in with Google.
+
+**Root Causes:**
+1. `apps/api/.env` had incorrect `AUTH_URL` (pointing to landing page instead of API)
+2. `apps/api/.env` was missing `LANDING_URL` and `DASHBOARD_URL`
+3. Landing page was linking directly to `/auth/signin/google` instead of `/auth/signin`
+4. Elysia prefix was interfering with Auth.js path handling
+
+**Solution:**
+1. **Fix `apps/api/.env`**: Ensure it matches root `.env` with correct URLs:
+   ```bash
+   AUTH_URL=http://localhost:3500  # Must point to API server
+   LANDING_URL=http://localhost:3501
+   DASHBOARD_URL=http://localhost:3502
+   ```
+
+2. **Fix landing page link**: Change from `/auth/signin/google` to `/auth/signin`
+   ```astro
+   <!-- apps/landing/src/components/Hero.astro -->
+   <a href={`${apiUrl}/auth/signin`}>Get Started</a>
+   ```
+
+3. **Fix Auth.js config**: Add `basePath: "/auth"` to `auth.config.ts`
+   ```typescript
+   export const authConfig: AuthConfig = {
+     basePath: "/auth",
+     // ...
+   }
+   ```
+
+4. **Fix Elysia routing**: Remove prefix to let Auth.js see full path
+   ```typescript
+   // apps/api/src/routes/auth.ts
+   export const authRoutes = new Elysia()  // No prefix!
+     .all("/auth/*", async ({ request }) => {
+       const response = await Auth(request, authConfig);
+       return response;
+     });
+   ```
+
+**Key Learning:** Auth.js expects users to visit `/auth/signin` first, which shows a form with CSRF protection. Clicking "Sign in with Google" submits a POST request to `/auth/signin/google` with the CSRF token. Direct GET requests to `/auth/signin/google` will fail.
+
 ---
 
 ## Development Workflow
@@ -322,14 +374,14 @@ See `PROGRESS.md` for detailed phase-by-phase progress.
 - TanStack Start with fixed imports
 - Session utility with environment variables
 - Authenticated home page with greeting
-- Auth proxy route (optional)
+- ✅ **OAuth Flow Verified** - Full authentication working end-to-end
 
 ### 🚧 In Progress
 
-**Testing OAuth Flow**
-- Verify end-to-end authentication
-- Test redirect flow: Landing → Google → Dashboard
-- Confirm session creation in database
+**Phase 4: Core Features**
+- Tasks Module UI
+- Events Module UI
+- Notes Module UI
 
 ### 📋 Pending Phases
 
