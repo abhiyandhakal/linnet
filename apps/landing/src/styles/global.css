@@ -1,0 +1,25 @@
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+@import '@fontsource/outfit/400.css';
+@import '@fontsource/outfit/600.css';
+@import "tailwindcss";
+
+:root {
+  --paper: #FDFCF0;
+  --ink: #001F3F;
+  --red-pen: #E63946;
+  --muted-ink: #4A5568;
+  --border: #D4D1C8;
+}
+
+body {
+  background: var(--paper);
+  font-family: 'Outfit', sans-serif;
+  color: var(--ink);
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Instrument Serif', serif;
+}

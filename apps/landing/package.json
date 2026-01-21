@@ -1,0 +1,23 @@
+{
+  "name": "landing",
+  "version": "0.0.1",
+  "dependencies": {
+    "@fontsource/instrument-serif": "^5.2.8",
+    "@fontsource/outfit": "^5.2.8",
+    "astro": "^5.16.11",
+    "tailwindcss": "^4.1.18"
+  },
+  "scripts": {
+    "dev": "astro dev --port 3501",
+    "start": "astro dev --port 3501",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "tsc --noEmit"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "postcss": "^8.5.6"
+  }
+}

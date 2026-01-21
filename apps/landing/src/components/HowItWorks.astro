@@ -1,0 +1,47 @@
+---
+const steps = [
+  {
+    num: "01",
+    title: "Speak or Type",
+    desc: "\"Meeting with Sarah tomorrow at 3pm about the Q2 budget\""
+  },
+  {
+    num: "02",
+    title: "AI Extracts",
+    desc: "Linnet creates a calendar event and links the \"Q2 budget\" note context."
+  },
+  {
+    num: "03",
+    title: "Stay Briefed",
+    desc: "Your morning briefing highlights this meeting and related tasks."
+  },
+  {
+    num: "04",
+    title: "Stay Agile",
+    desc: "Review and approve AI suggestions to keep your schedule realistic."
+  }
+];
+---
+<section class="py-24 px-4 max-w-5xl mx-auto">
+  <div class="text-center mb-16">
+    <h2 class="text-4xl md:text-5xl mb-4">How it works</h2>
+    <p class="text-[var(--muted-ink)]">From thought to organized action in seconds.</p>
+  </div>
+  
+  <div class="grid md:grid-cols-4 gap-8">
+    {steps.map((step, i) => (
+      <div class="relative">
+        {i < steps.length - 1 && (
+          <div class="hidden md:block absolute top-8 left-1/2 w-full h-[1px] bg-[var(--border)] -z-10"></div>
+        )}
+        <div class="flex flex-col items-center text-center">
+          <div class="w-16 h-16 bg-[var(--paper)] border border-[var(--border)] rounded-full flex items-center justify-center text-xl font-serif mb-6 shadow-sm z-10">
+            {step.num}
+          </div>
+          <h3 class="text-xl mb-2 font-serif">{step.title}</h3>
+          <p class="text-sm text-[var(--muted-ink)]">{step.desc}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
