@@ -12,16 +12,27 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TasksImport } from './routes/tasks'
+import { Route as NotesImport } from './routes/notes'
 import { Route as EventsImport } from './routes/events'
 import { Route as IndexImport } from './routes/index'
 import { Route as TasksNewImport } from './routes/tasks.new'
+import { Route as TasksIdImport } from './routes/tasks.$id'
+import { Route as NotesNewImport } from './routes/notes.new'
+import { Route as NotesIdImport } from './routes/notes.$id'
 import { Route as EventsNewImport } from './routes/events.new'
+import { Route as EventsIdImport } from './routes/events.$id'
 
 // Create/Update Routes
 
 const TasksRoute = TasksImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotesRoute = NotesImport.update({
+  id: '/notes',
+  path: '/notes',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,9 +54,33 @@ const TasksNewRoute = TasksNewImport.update({
   getParentRoute: () => TasksRoute,
 } as any)
 
+const TasksIdRoute = TasksIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TasksRoute,
+} as any)
+
+const NotesNewRoute = NotesNewImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => NotesRoute,
+} as any)
+
+const NotesIdRoute = NotesIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NotesRoute,
+} as any)
+
 const EventsNewRoute = EventsNewImport.update({
   id: '/new',
   path: '/new',
+  getParentRoute: () => EventsRoute,
+} as any)
+
+const EventsIdRoute = EventsIdImport.update({
+  id: '/$id',
+  path: '/$id',
   getParentRoute: () => EventsRoute,
 } as any)
 
@@ -67,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsImport
       parentRoute: typeof rootRoute
     }
+    '/notes': {
+      id: '/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesImport
+      parentRoute: typeof rootRoute
+    }
     '/tasks': {
       id: '/tasks'
       path: '/tasks'
@@ -74,12 +116,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TasksImport
       parentRoute: typeof rootRoute
     }
+    '/events/$id': {
+      id: '/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof EventsIdImport
+      parentRoute: typeof EventsImport
+    }
     '/events/new': {
       id: '/events/new'
       path: '/new'
       fullPath: '/events/new'
       preLoaderRoute: typeof EventsNewImport
       parentRoute: typeof EventsImport
+    }
+    '/notes/$id': {
+      id: '/notes/$id'
+      path: '/$id'
+      fullPath: '/notes/$id'
+      preLoaderRoute: typeof NotesIdImport
+      parentRoute: typeof NotesImport
+    }
+    '/notes/new': {
+      id: '/notes/new'
+      path: '/new'
+      fullPath: '/notes/new'
+      preLoaderRoute: typeof NotesNewImport
+      parentRoute: typeof NotesImport
+    }
+    '/tasks/$id': {
+      id: '/tasks/$id'
+      path: '/$id'
+      fullPath: '/tasks/$id'
+      preLoaderRoute: typeof TasksIdImport
+      parentRoute: typeof TasksImport
     }
     '/tasks/new': {
       id: '/tasks/new'
@@ -94,21 +164,37 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface EventsRouteChildren {
+  EventsIdRoute: typeof EventsIdRoute
   EventsNewRoute: typeof EventsNewRoute
 }
 
 const EventsRouteChildren: EventsRouteChildren = {
+  EventsIdRoute: EventsIdRoute,
   EventsNewRoute: EventsNewRoute,
 }
 
 const EventsRouteWithChildren =
   EventsRoute._addFileChildren(EventsRouteChildren)
 
+interface NotesRouteChildren {
+  NotesIdRoute: typeof NotesIdRoute
+  NotesNewRoute: typeof NotesNewRoute
+}
+
+const NotesRouteChildren: NotesRouteChildren = {
+  NotesIdRoute: NotesIdRoute,
+  NotesNewRoute: NotesNewRoute,
+}
+
+const NotesRouteWithChildren = NotesRoute._addFileChildren(NotesRouteChildren)
+
 interface TasksRouteChildren {
+  TasksIdRoute: typeof TasksIdRoute
   TasksNewRoute: typeof TasksNewRoute
 }
 
 const TasksRouteChildren: TasksRouteChildren = {
+  TasksIdRoute: TasksIdRoute,
   TasksNewRoute: TasksNewRoute,
 }
 
@@ -117,16 +203,26 @@ const TasksRouteWithChildren = TasksRoute._addFileChildren(TasksRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/events': typeof EventsRouteWithChildren
+  '/notes': typeof NotesRouteWithChildren
   '/tasks': typeof TasksRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
   '/events/new': typeof EventsNewRoute
+  '/notes/$id': typeof NotesIdRoute
+  '/notes/new': typeof NotesNewRoute
+  '/tasks/$id': typeof TasksIdRoute
   '/tasks/new': typeof TasksNewRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/events': typeof EventsRouteWithChildren
+  '/notes': typeof NotesRouteWithChildren
   '/tasks': typeof TasksRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
   '/events/new': typeof EventsNewRoute
+  '/notes/$id': typeof NotesIdRoute
+  '/notes/new': typeof NotesNewRoute
+  '/tasks/$id': typeof TasksIdRoute
   '/tasks/new': typeof TasksNewRoute
 }
 
@@ -134,29 +230,67 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/events': typeof EventsRouteWithChildren
+  '/notes': typeof NotesRouteWithChildren
   '/tasks': typeof TasksRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
   '/events/new': typeof EventsNewRoute
+  '/notes/$id': typeof NotesIdRoute
+  '/notes/new': typeof NotesNewRoute
+  '/tasks/$id': typeof TasksIdRoute
   '/tasks/new': typeof TasksNewRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/events' | '/tasks' | '/events/new' | '/tasks/new'
+  fullPaths:
+    | '/'
+    | '/events'
+    | '/notes'
+    | '/tasks'
+    | '/events/$id'
+    | '/events/new'
+    | '/notes/$id'
+    | '/notes/new'
+    | '/tasks/$id'
+    | '/tasks/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/events' | '/tasks' | '/events/new' | '/tasks/new'
-  id: '__root__' | '/' | '/events' | '/tasks' | '/events/new' | '/tasks/new'
+  to:
+    | '/'
+    | '/events'
+    | '/notes'
+    | '/tasks'
+    | '/events/$id'
+    | '/events/new'
+    | '/notes/$id'
+    | '/notes/new'
+    | '/tasks/$id'
+    | '/tasks/new'
+  id:
+    | '__root__'
+    | '/'
+    | '/events'
+    | '/notes'
+    | '/tasks'
+    | '/events/$id'
+    | '/events/new'
+    | '/notes/$id'
+    | '/notes/new'
+    | '/tasks/$id'
+    | '/tasks/new'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EventsRoute: typeof EventsRouteWithChildren
+  NotesRoute: typeof NotesRouteWithChildren
   TasksRoute: typeof TasksRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EventsRoute: EventsRouteWithChildren,
+  NotesRoute: NotesRouteWithChildren,
   TasksRoute: TasksRouteWithChildren,
 }
 
@@ -172,6 +306,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/events",
+        "/notes",
         "/tasks"
       ]
     },
@@ -181,18 +316,43 @@ export const routeTree = rootRoute
     "/events": {
       "filePath": "events.tsx",
       "children": [
+        "/events/$id",
         "/events/new"
+      ]
+    },
+    "/notes": {
+      "filePath": "notes.tsx",
+      "children": [
+        "/notes/$id",
+        "/notes/new"
       ]
     },
     "/tasks": {
       "filePath": "tasks.tsx",
       "children": [
+        "/tasks/$id",
         "/tasks/new"
       ]
+    },
+    "/events/$id": {
+      "filePath": "events.$id.tsx",
+      "parent": "/events"
     },
     "/events/new": {
       "filePath": "events.new.tsx",
       "parent": "/events"
+    },
+    "/notes/$id": {
+      "filePath": "notes.$id.tsx",
+      "parent": "/notes"
+    },
+    "/notes/new": {
+      "filePath": "notes.new.tsx",
+      "parent": "/notes"
+    },
+    "/tasks/$id": {
+      "filePath": "tasks.$id.tsx",
+      "parent": "/tasks"
     },
     "/tasks/new": {
       "filePath": "tasks.new.tsx",

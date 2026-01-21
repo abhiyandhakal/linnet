@@ -132,7 +132,10 @@ function TasksPage() {
                 className="bg-white/50 p-6 rounded-lg border border-[var(--border)] hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
+                  <Link 
+                    to={`/tasks/${task.id}`}
+                    className="flex-1 hover:opacity-80 transition-opacity"
+                  >
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-medium">{task.title}</h3>
                       <span className={`text-sm ${getPriorityColor(task.priority)}`}>
@@ -163,7 +166,7 @@ function TasksPage() {
                         ))}
                       </div>
                     )}
-                  </div>
+                  </Link>
                   
                   <div className="flex flex-col gap-2">
                     {task.status !== 'done' && (

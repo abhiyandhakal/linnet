@@ -97,23 +97,81 @@ app/routes/
 
 ---
 
-## Phase 4: Core Features (PENDING)
+## Phase 4: Core Features ✅
 
-### Tasks Module
-- [ ] Create task form
-- [ ] Task list view
-- [ ] Task status updates
-- [ ] Natural language parsing
+### Dashboard Navigation ✅
+- [x] Sidebar navigation component (`components/Navigation.tsx`)
+- [x] Dashboard layout wrapper (`components/DashboardLayout.tsx`)
+- [x] Active route highlighting
+- [x] Sign out functionality
 
-### Events Module
-- [ ] Calendar view
-- [ ] Event creation
-- [ ] Google Calendar sync
+### Tasks Module ✅
+- [x] Create task form (`routes/tasks.new.tsx`)
+- [x] Task list view (`routes/tasks.tsx`)
+- [x] Task detail/edit page (`routes/tasks.$id.tsx`)
+- [x] Task status updates (quick actions: Start, Done)
+- [x] Full CRUD operations
+- [x] Priority indicators (high/medium/low with color coding)
+- [x] Due date display
+- [x] Tags support
+- [x] API endpoints (`apps/api/src/routes/tasks.ts`)
+  - GET /tasks - List all tasks
+  - GET /tasks/:id - Get single task
+  - POST /tasks - Create task
+  - PATCH /tasks/:id - Update task
+  - DELETE /tasks/:id - Delete task
 
-### Notes Module
-- [ ] Rich text editor
-- [ ] Note organization
-- [ ] Search functionality
+### Events Module ✅
+- [x] Event creation form (`routes/events.new.tsx`)
+- [x] Event list view (`routes/events.tsx`)
+- [x] Event detail/edit page (`routes/events.$id.tsx`)
+- [x] Upcoming/All events toggle
+- [x] Full CRUD operations
+- [x] Smart date labels (Today, Tomorrow, or full date)
+- [x] Time range display
+- [x] Location and attendees support
+- [x] Time validation (end time must be after start time)
+- [x] API endpoints (`apps/api/src/routes/events.ts`)
+  - GET /events - List all events
+  - GET /events/upcoming - List upcoming events only
+  - GET /events/:id - Get single event
+  - POST /events - Create event
+  - PATCH /events/:id - Update event
+  - DELETE /events/:id - Delete event
+
+### Notes Module ✅
+- [x] Create note form (`routes/notes.new.tsx`)
+- [x] Note list view (`routes/notes.tsx`)
+- [x] Note detail/edit page (`routes/notes.$id.tsx`)
+- [x] Full CRUD operations
+- [x] Real-time search with debouncing (300ms)
+- [x] Grid layout (2 columns on desktop)
+- [x] Content truncation with preview
+- [x] Tags support
+- [x] Monospace font for content editing
+- [x] API endpoints (`apps/api/src/routes/notes.ts`)
+  - GET /notes?search=query - List all notes with optional search
+  - GET /notes/:id - Get single note
+  - POST /notes - Create note
+  - PATCH /notes/:id - Update note
+  - DELETE /notes/:id - Delete note
+
+### Features Implemented
+- ✅ Clickable cards/links to detail pages
+- ✅ Edit mode toggle on detail pages
+- ✅ Delete confirmations (using window.confirm)
+- ✅ Loading states (during create/update/delete operations)
+- ✅ Error handling (validation and API errors)
+- ✅ Proper form validation
+- ✅ Consistent UI/UX across all modules
+- ✅ Analog Utility design system maintained
+
+### Known Limitations
+- [ ] Natural language parsing (deferred to Phase 5)
+- [ ] Google Calendar sync (deferred)
+- [ ] Rich text editor for notes (using plain textarea with monospace font)
+- [ ] Advanced search/filtering
+- [ ] Pagination (all lists load entire dataset)
 
 ---
 
@@ -209,20 +267,35 @@ UnknownAction: Unsupported action
 2. ✅ Fix Dashboard build
 3. ✅ Fix Landing page Tailwind v4 conflict
 4. ✅ Verify OAuth flow end-to-end
-5. 🔄 **Start Phase 4: Core Features**
-   - Implement dashboard navigation
-   - Build Tasks module UI
-   - Build Events module UI
-   - Build Notes module UI
-4. ⏳ Start dev server (`bun dev`)
-5. ⏳ Verify OAuth flow (3501 → API → 3502)
-6. ⏳ Implement dashboard UI
-7. ⏳ Integrate Gemini API
+5. ✅ **Complete Phase 4: Core Features**
+   - ✅ Implement dashboard navigation
+   - ✅ Build Tasks module UI with full CRUD
+   - ✅ Build Events module UI with full CRUD
+   - ✅ Build Notes module UI with full CRUD
+6. 🔄 **Start Phase 5: AI Integration**
+   - Set up Gemini client in `packages/logic`
+   - Implement natural language parsing for tasks/events
+   - Generate daily briefings
+   - Add smart suggestions
+7. ⏳ **Phase 6: Vector Search**
+   - Implement embedding generation
+   - Add semantic search for notes
+8. ⏳ **Phase 7: Testing**
+   - E2E tests for OAuth flow
+   - API endpoint tests
+   - CRUD operation tests
 
 ---
 
 ## Git Commits Log
 
+- `feat(dashboard): add complete CRUD for tasks, events, and notes` (2026-01-21)
+- `feat(dashboard): add navigation sidebar and dashboard layout` (2026-01-21)
+- `feat(events): implement events module with CRUD API and UI` (2026-01-21)
+- `feat(tasks): implement tasks module with CRUD API and UI` (2026-01-21)
+- `docs(root): update PROGRESS.md to reflect completed OAuth flow` (2026-01-21)
+- `docs(root): update AGENTS.md with OAuth flow fix details` (2026-01-21)
+- `fix(auth): resolve OAuth flow by fixing signin URL and auth routing` (2026-01-21)
 - `fix(dashboard): replace Meta with HeadContent from @tanstack/react-router`
 - `feat(dashboard): add auth proxy route for OAuth flow`
 - `chore: update environment variables with OAuth and database credentials`
@@ -230,4 +303,4 @@ UnknownAction: Unsupported action
 ---
 
 **Last Updated:** 2026-01-21
-**Current Phase:** Phase 3 (Dashboard Setup) → Phase 1 (Landing Page CSS Fix)
+**Current Phase:** Phase 4 (Core Features) ✅ → Phase 5 (AI Integration) 🔄

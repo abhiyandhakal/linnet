@@ -164,9 +164,10 @@ function EventsPage() {
         ) : (
           <div className="space-y-4">
             {events.map((event) => (
-              <div
+              <Link
                 key={event.id}
-                className="bg-white/50 p-6 rounded-lg border border-[var(--border)] hover:shadow-md transition-shadow"
+                to={`/events/${event.id}`}
+                className="bg-white/50 p-6 rounded-lg border border-[var(--border)] hover:shadow-md transition-shadow block"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
@@ -203,7 +204,7 @@ function EventsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -3,6 +3,7 @@ import { cors } from "@elysiajs/cors";
 import { authRoutes } from "./routes/auth";
 import { tasksRoutes } from "./routes/tasks";
 import { eventsRoutes } from "./routes/events";
+import { notesRoutes } from "./routes/notes";
 
 const app = new Elysia()
   .use(cors({
@@ -15,6 +16,7 @@ const app = new Elysia()
   .use(authRoutes)
   .use(tasksRoutes)
   .use(eventsRoutes)
+  .use(notesRoutes)
   .get("/", () => "Hello Elysia")
   .listen(process.env.API_PORT || 3500);
 
