@@ -1,5 +1,5 @@
 ---
-const apiUrl = import.meta.env.API_URL || 'http://localhost:3500';
+const dashboardUrl = import.meta.env.DASHBOARD_URL || 'http://localhost:3502';
 ---
 <section class="flex-1 flex flex-col justify-center items-center px-4 py-20 text-center max-w-4xl mx-auto relative overflow-hidden">
   <div class="absolute inset-0 -z-10 opacity-30">
@@ -26,7 +26,7 @@ const apiUrl = import.meta.env.API_URL || 'http://localhost:3500';
   
   <div class="flex flex-col sm:flex-row gap-4 items-center">
     <a 
-      href={`${apiUrl}/auth/signin`}
+      href={`${dashboardUrl}/api/auth/signin`}
       class="px-8 py-4 bg-[var(--ink)] text-[var(--paper)] text-lg rounded-lg hover:opacity-90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2"
     >
       Get Started

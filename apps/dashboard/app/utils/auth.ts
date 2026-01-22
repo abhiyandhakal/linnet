@@ -11,19 +11,25 @@ export interface Session {
 }
 
 /**
- * Fetch the current session from the API
- * Cookies with domain=localhost will be shared across all ports
+ * Fetch the current session from the dashboard's local auth endpoint
  */
 export async function getSession(): Promise<Session> {
   try {
-    const apiUrl = process.env.VITE_API_URL || "http://localhost:3500";
-    
-    const response = await fetch(`${apiUrl}/auth/session`, {
+    const baseUrl =
+      typeof window === "undefined"
+        ? process.env.DASHBOARD_URL || process.env.AUTH_URL || "http://localhost:3502"
+        : "";
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+    const response = await fetch(`${baseUrl}/api/auth/session`, {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
     if (!response.ok) {
       return { user: null };

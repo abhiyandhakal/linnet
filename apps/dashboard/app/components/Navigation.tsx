@@ -16,8 +16,6 @@ export function Navigation() {
     return pathname.startsWith(href)
   }
   
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
-  
   return (
     <nav className="w-64 bg-white/50 border-r border-[var(--border)] min-h-screen p-6 flex flex-col">
       <div className="mb-8">
@@ -45,7 +43,7 @@ export function Navigation() {
       
       <div className="mt-auto pt-6 border-t border-[var(--border)]">
         <a
-          href={`${apiUrl}/auth/signout`}
+          href="/api/auth/signout"
           className="flex items-center gap-3 px-4 py-3 text-[var(--muted-ink)] hover:text-[var(--red-pen)] transition-colors rounded-lg hover:bg-white/50"
         >
           <span className="text-xl">↗</span>

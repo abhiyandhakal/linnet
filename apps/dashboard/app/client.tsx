@@ -1,4 +1,22 @@
 /// <reference types="vinxi/types/client" />
-import { hydrateStart } from '@tanstack/start'
+import { hydrateRoot } from "react-dom/client";
+import { createBrowserHistory, RouterProvider } from "@tanstack/react-router";
+import { createRouter } from "./router";
 
-hydrateStart()
+const router = createRouter();
+router.update({
+  history: createBrowserHistory(),
+  context: {
+    head: "",
+  },
+});
+
+const root = document.getElementById("app-root");
+if (root) {
+  hydrateRoot(root, <RouterProvider router={router as any} />);
+  router.load();
+}
+
+export default function Client() {
+  return null;
+}

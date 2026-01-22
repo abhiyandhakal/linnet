@@ -8,9 +8,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@auth/core": "^0.37.4",
+    "@auth/drizzle-adapter": "^1.7.4",
     "@fontsource/instrument-serif": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
     "@linnet/api-client": "workspace:*",
+    "@linnet/db": "workspace:*",
     "@linnet/logic": "workspace:*",
     "@linnet/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.1.18",
