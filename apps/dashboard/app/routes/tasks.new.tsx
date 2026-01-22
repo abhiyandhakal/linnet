@@ -113,7 +113,7 @@ function NewTaskPage() {
         <h1 className="text-4xl mb-8">Create New Task</h1>
         
         {/* AI Quick Input */}
-        <div className="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mb-8 paper-card paper-card--soft">
           <h2 className="text-lg font-medium mb-3 flex items-center gap-2">
             <span>✨</span>
             <span>Quick Create with AI</span>
@@ -135,7 +135,7 @@ function NewTaskPage() {
               type="button"
               onClick={handleParseQuickInput}
               disabled={parsing || !quickInput.trim()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="paper-button paper-button--primary disabled:opacity-50"
             >
               {parsing ? 'Parsing...' : 'Parse'}
             </button>
@@ -226,14 +226,14 @@ function NewTaskPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="flex-1 paper-button paper-button--primary disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Task'}
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: '/tasks' })}
-              className="px-6 py-3 border border-[var(--border)] rounded-lg hover:bg-white/50 transition-colors"
+              className="paper-button"
             >
               Cancel
             </button>

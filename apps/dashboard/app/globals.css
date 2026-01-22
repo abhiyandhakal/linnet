@@ -16,3 +16,71 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Instrument Serif', serif;
 }
+
+.paper-card {
+  position: relative;
+  background: linear-gradient(180deg, #fffdf3 0%, #fbf8e8 100%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 28px rgba(26, 26, 26, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.paper-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(26, 26, 26, 0.05),
+    rgba(26, 26, 26, 0.05) 1px,
+    transparent 1px,
+    transparent 28px
+  );
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.paper-card--soft {
+  background: linear-gradient(180deg, #fffdf7 0%, #fef3dc 100%);
+}
+
+.paper-card--accent {
+  background: linear-gradient(180deg, #fff8ed 0%, #fdebd8 100%);
+}
+
+.paper-card--action {
+  text-align: center;
+  cursor: pointer;
+}
+
+.paper-card--action:hover {
+  transform: translateY(-4px) rotate(-0.2deg);
+  box-shadow: 0 18px 32px rgba(26, 26, 26, 0.12);
+}
+
+.paper-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #fffaf0;
+  color: var(--ink);
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 8px 18px rgba(26, 26, 26, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.paper-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(26, 26, 26, 0.14);
+}
+
+.paper-button--primary {
+  background: var(--ink);
+  color: var(--paper);
+}

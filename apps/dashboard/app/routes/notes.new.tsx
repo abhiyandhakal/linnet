@@ -127,14 +127,14 @@ function NewNotePage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="flex-1 paper-button paper-button--primary disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Note'}
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: '/notes' })}
-              className="px-6 py-3 border border-[var(--border)] rounded-lg hover:bg-white/50 transition-colors"
+              className="paper-button"
             >
               Cancel
             </button>
