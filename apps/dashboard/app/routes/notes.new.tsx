@@ -1,18 +1,15 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { DashboardLayout } from '../components/DashboardLayout'
-import { getSession } from '../utils/auth'
-import { useState, FormEvent } from 'react'
+import { getSession, type User } from '../utils/auth'
+import { useState, FormEvent, useEffect } from 'react'
 
 export const Route = createFileRoute('/notes/new')({
   component: NewNotePage,
-  loader: async () => {
-    const session = await getSession()
-    return { session }
-  }
 })
 
 function NewNotePage() {
-  const { session } = Route.useLoaderData()
+  const [session, setSession] = useState<{ user: User | null } | null>(null)
+  const [sessionLoading, setSessionLoading] = useState(true)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -23,6 +20,21 @@ function NewNotePage() {
     tags: '',
   })
   
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSession()
+      setSession(sessionData)
+      setSessionLoading(false)
+    }
+    fetchSession()
+  }, [])
+
+  useEffect(() => {
+    if (!sessionLoading && !session?.user) {
+      window.location.href = '/api/auth/signin'
+    }
+  }, [sessionLoading, session])
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -41,6 +53,11 @@ function NewNotePage() {
     }
     
     try {
+      if (!session?.user?.id) {
+        setError('Please sign in again')
+        setLoading(false)
+        return
+      }
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
       const response = await fetch(`${apiUrl}/notes`, {
         method: 'POST',

@@ -225,7 +225,7 @@ function EventDetailPage() {
           </div>
           <button
             onClick={() => navigate({ to: '/events' })}
-            className="px-6 py-3 border border-[var(--border)] rounded-lg hover:bg-white/50 transition-colors"
+            className="paper-button"
           >
             Back to Events
           </button>
@@ -249,14 +249,14 @@ function EventDetailPage() {
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+                  className="paper-button paper-button--primary"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="px-6 py-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                  className="paper-button disabled:opacity-50"
                 >
                   {deleting ? 'Deleting...' : 'Delete'}
                 </button>
@@ -280,7 +280,7 @@ function EventDetailPage() {
                   }
                   setError('')
                 }}
-                className="px-6 py-3 border border-[var(--border)] rounded-lg hover:bg-white/50 transition-colors"
+                className="paper-button"
               >
                 Cancel
               </button>
@@ -295,7 +295,7 @@ function EventDetailPage() {
         )}
         
         {!isEditing && event ? (
-          <div className="bg-white/50 p-8 rounded-lg border border-[var(--border)]">
+          <div className="paper-card">
             <h1 className="text-4xl mb-6">{event.title}</h1>
             
             <div className="space-y-4 mb-6">

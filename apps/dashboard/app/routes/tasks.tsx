@@ -106,7 +106,7 @@ function TasksPage() {
           <h1 className="text-4xl">Tasks</h1>
           <Link
             to="/tasks/new"
-            className="px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+            className="paper-button paper-button--primary"
           >
             + New Task
           </Link>
@@ -115,11 +115,11 @@ function TasksPage() {
         {loading ? (
           <div className="text-center text-[var(--muted-ink)] py-12">Loading tasks...</div>
         ) : tasks.length === 0 ? (
-          <div className="bg-white/50 p-12 rounded-lg border border-[var(--border)] text-center">
+          <div className="paper-card text-center">
             <p className="text-[var(--muted-ink)] text-lg mb-4">No tasks yet</p>
             <Link
               to="/tasks/new"
-              className="inline-block px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+              className="paper-button paper-button--primary"
             >
               Create your first task
             </Link>
@@ -127,10 +127,7 @@ function TasksPage() {
         ) : (
           <div className="space-y-4">
             {tasks.map((task) => (
-              <div
-                key={task.id}
-                className="bg-white/50 p-6 rounded-lg border border-[var(--border)] hover:shadow-md transition-shadow"
-              >
+              <div key={task.id} className="paper-card paper-card--action">
                 <div className="flex items-start justify-between gap-4">
                   <Link 
                     to={`/tasks/${task.id}`}
@@ -172,7 +169,7 @@ function TasksPage() {
                     {task.status !== 'done' && (
                       <button
                         onClick={() => updateTaskStatus(task.id, 'done')}
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors text-sm"
+                        className="paper-button"
                       >
                         ✓ Done
                       </button>
@@ -180,7 +177,7 @@ function TasksPage() {
                     {task.status === 'todo' && (
                       <button
                         onClick={() => updateTaskStatus(task.id, 'in_progress')}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
+                        className="paper-button"
                       >
                         ⟳ Start
                       </button>

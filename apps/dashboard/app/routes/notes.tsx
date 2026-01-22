@@ -100,7 +100,7 @@ function NotesPage() {
           <h1 className="text-4xl">Notes</h1>
           <Link
             to="/notes/new"
-            className="px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+            className="paper-button paper-button--primary"
           >
             + New Note
           </Link>
@@ -110,21 +110,13 @@ function NotesPage() {
           <div className="flex gap-4 mb-4">
             <button
               onClick={() => setSearchMode('text')}
-              className={`px-4 py-2 rounded-lg border transition-all ${
-                searchMode === 'text'
-                  ? 'bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]'
-                  : 'bg-white/50 text-[var(--ink)] border-[var(--border)] hover:border-[var(--ink)]'
-              }`}
+              className={`paper-button ${searchMode === 'text' ? 'paper-button--primary' : ''}`}
             >
               Text Search
             </button>
             <button
               onClick={() => setSearchMode('semantic')}
-              className={`px-4 py-2 rounded-lg border transition-all ${
-                searchMode === 'semantic'
-                  ? 'bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]'
-                  : 'bg-white/50 text-[var(--ink)] border-[var(--border)] hover:border-[var(--ink)]'
-              }`}
+              className={`paper-button ${searchMode === 'semantic' ? 'paper-button--primary' : ''}`}
             >
               Semantic Search
             </button>
@@ -149,14 +141,14 @@ function NotesPage() {
             {debouncedSearch ? 'Searching...' : 'Loading notes...'}
           </div>
         ) : notes.length === 0 ? (
-          <div className="bg-white/50 p-12 rounded-lg border border-[var(--border)] text-center">
+          <div className="paper-card text-center">
             <p className="text-[var(--muted-ink)] text-lg mb-4">
               {debouncedSearch ? `No notes found matching "${debouncedSearch}"` : 'No notes yet'}
             </p>
             {!debouncedSearch && (
               <Link
                 to="/notes/new"
-                className="inline-block px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+                className="paper-button paper-button--primary"
               >
                 Create your first note
               </Link>
@@ -168,7 +160,7 @@ function NotesPage() {
               <Link
                 key={note.id}
                 to={`/notes/${note.id}`}
-                className="bg-white/50 p-6 rounded-lg border border-[var(--border)] hover:shadow-md transition-all hover:-translate-y-0.5 block"
+                className="paper-card paper-card--action block"
               >
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <h3 className="text-xl font-medium flex-1">{note.title}</h3>

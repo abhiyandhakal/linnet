@@ -118,7 +118,7 @@ function EventsPage() {
           <h1 className="text-4xl">Events</h1>
           <Link
             to="/events/new"
-            className="px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+            className="paper-button paper-button--primary"
           >
             + New Event
           </Link>
@@ -127,21 +127,13 @@ function EventsPage() {
         <div className="flex gap-4 mb-6">
           <button
             onClick={() => setView('upcoming')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              view === 'upcoming'
-                ? 'bg-[var(--ink)] text-[var(--paper)]'
-                : 'bg-white/50 border border-[var(--border)] hover:bg-white/80'
-            }`}
+            className={`paper-button ${view === 'upcoming' ? 'paper-button--primary' : ''}`}
           >
             Upcoming
           </button>
           <button
             onClick={() => setView('all')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              view === 'all'
-                ? 'bg-[var(--ink)] text-[var(--paper)]'
-                : 'bg-white/50 border border-[var(--border)] hover:bg-white/80'
-            }`}
+            className={`paper-button ${view === 'all' ? 'paper-button--primary' : ''}`}
           >
             All Events
           </button>
@@ -150,13 +142,13 @@ function EventsPage() {
         {loading ? (
           <div className="text-center text-[var(--muted-ink)] py-12">Loading events...</div>
         ) : events.length === 0 ? (
-          <div className="bg-white/50 p-12 rounded-lg border border-[var(--border)] text-center">
+          <div className="paper-card text-center">
             <p className="text-[var(--muted-ink)] text-lg mb-4">
               {view === 'upcoming' ? 'No upcoming events' : 'No events yet'}
             </p>
             <Link
               to="/events/new"
-              className="inline-block px-6 py-3 bg-[var(--ink)] text-[var(--paper)] rounded-lg hover:opacity-90 transition-opacity"
+              className="paper-button paper-button--primary"
             >
               Create your first event
             </Link>
@@ -167,7 +159,7 @@ function EventsPage() {
               <Link
                 key={event.id}
                 to={`/events/${event.id}`}
-                className="bg-white/50 p-6 rounded-lg border border-[var(--border)] hover:shadow-md transition-shadow block"
+                className="paper-card paper-card--action block"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">

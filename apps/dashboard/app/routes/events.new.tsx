@@ -1,18 +1,15 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { DashboardLayout } from '../components/DashboardLayout'
-import { getSession } from '../utils/auth'
-import { useState, FormEvent } from 'react'
+import { getSession, type User } from '../utils/auth'
+import { useState, FormEvent, useEffect } from 'react'
 
 export const Route = createFileRoute('/events/new')({
   component: NewEventPage,
-  loader: async () => {
-    const session = await getSession()
-    return { session }
-  }
 })
 
 function NewEventPage() {
-  const { session } = Route.useLoaderData()
+  const [session, setSession] = useState<{ user: User | null } | null>(null)
+  const [sessionLoading, setSessionLoading] = useState(true)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [parsing, setParsing] = useState(false)
@@ -32,6 +29,21 @@ function NewEventPage() {
     attendees: '',
   })
   
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSession()
+      setSession(sessionData)
+      setSessionLoading(false)
+    }
+    fetchSession()
+  }, [])
+
+  useEffect(() => {
+    if (!sessionLoading && !session?.user) {
+      window.location.href = '/api/auth/signin'
+    }
+  }, [sessionLoading, session])
+
   const handleParseQuickInput = async () => {
     if (!quickInput.trim()) return
     
@@ -39,6 +51,11 @@ function NewEventPage() {
     setError('')
     
     try {
+      if (!session?.user?.id) {
+        setError('Please sign in again')
+        setLoading(false)
+        return
+      }
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3500'
       const response = await fetch(`${apiUrl}/ai/parse-event`, {
         method: 'POST',
