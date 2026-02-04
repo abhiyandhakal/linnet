@@ -1,0 +1,12 @@
+{
+  "name": "@linnet/api-client",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@elysiajs/eden": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

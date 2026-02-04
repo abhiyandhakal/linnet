@@ -8,16 +8,14 @@ A full-stack TypeScript monorepo with TanStack Start frontend and Elysia backend
 linnet-monorepo/
 ├── apps/
 │   ├── api/              # Elysia backend (REST API)
-│   └── dashboard/        # TanStack Start frontend (SSR React)
+│   └── dashboard/        # TanStack React frontend (Vite)
 └── packages/
-    ├── logic/            # Shared business logic (Zod schemas)
-    ├── api-client/       # Type-safe API client (Elysia Eden)
-    └── ui/               # Shared React components
+    └── api-client/       # Type-safe API client (Elysia Eden)
 ```
 
 ## Tech Stack
 
-- **Frontend**: TanStack Start (React + SSR)
+- **Frontend**: TanStack Router (React)
 - **Backend**: Elysia (Bun-native web framework)
 - **Type Safety**: Elysia Eden Treaty (end-to-end types)
 - **Package Manager**: Bun
@@ -114,35 +112,33 @@ bun run typecheck    # Type check
 
 This monorepo features end-to-end type safety using Elysia Eden Treaty:
 
-1. **Define API routes** in `apps/api/src/index.ts`
+1. **Define API routes** in `apps/api/src/app.ts`
 2. **Export the app type**: `export type App = typeof app`
-3. **Import in api-client**: Type-safe client is automatically generated
-4. **Use in frontend**: Full autocomplete and type checking
+3. **Create the Eden client** in `packages/api-client`
+4. **Use in the dashboard** for typed requests
 
 Example:
 
 ```typescript
-// apps/api/src/index.ts
-const app = new Elysia()
+// apps/api/src/app.ts
+export const app = new Elysia()
   .get('/users/:id', ({ params }) => ({ id: params.id, name: 'John' }))
 
 export type App = typeof app
 
 // packages/api-client/src/index.ts
-export const api = edenTreaty<App>('http://localhost:3500')
+export const createApiClient = <App>(baseUrl: string) => treaty<App>(baseUrl)
 
-// apps/dashboard - Usage
+// apps/dashboard/src/router.tsx
+const api = createApiClient<App>(import.meta.env.VITE_API_URL)
 const { data } = await api.users['123'].get()
-// data is fully typed! { id: string, name: string }
 ```
 
 ## Project Structure
 
 ### Packages
 
-- **`@linnet/logic`**: Shared business logic, validation schemas (Zod)
 - **`@linnet/api-client`**: Type-safe API client using Elysia Eden Treaty
-- **`@linnet/ui`**: Shared React components and utilities
 
 ### Apps
 
@@ -177,7 +173,7 @@ const response = await api['new-route'].get()
 # Build all packages
 bun run build
 
-# Output: apps/dashboard/.output/
+# Output: apps/dashboard/dist/
 ```
 
 ## Troubleshooting
