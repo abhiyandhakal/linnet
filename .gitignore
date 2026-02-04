@@ -1,0 +1,13 @@
+node_modules
+dist
+.vinxi
+.output
+.env
+.DS_Store
+coverage
+.bun
+build
+
+# TanStack/Vinxi temporary files
+*.timestamp_*.js
+app.config.timestamp_*.js
