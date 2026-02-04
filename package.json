@@ -1,0 +1,17 @@
+{
+  "name": "linnet",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bunx concurrently \"bun --cwd apps/api dev\" \"bun --cwd apps/dashboard dev\"",
+    "build": "bun --cwd apps/api build && bun --cwd apps/dashboard build",
+    "typecheck": "bun --cwd apps/api typecheck && bun --cwd apps/dashboard typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "typescript": "^5.6.3"
+  }
+}
