@@ -1,0 +1,8 @@
+{
+  "name": "@linnet/ai",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": { "typecheck": "tsc -p tsconfig.json", "test": "bun test" },
+  "dependencies": { "@linnet/domain": "workspace:*", "zod": "^3.24.2" }
+}
