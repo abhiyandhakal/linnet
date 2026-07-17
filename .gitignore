@@ -5,6 +5,8 @@ node_modules
 client_secret*.json
 dist
 .expo
+.android-sdk
+apps/mobile/android
 .DS_Store
 coverage
 *.db
