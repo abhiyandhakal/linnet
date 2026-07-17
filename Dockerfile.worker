@@ -1,0 +1,8 @@
+FROM oven/bun:1.2.13 AS base
+WORKDIR /app
+COPY package.json bun.lock ./
+COPY apps apps
+COPY packages packages
+RUN bun install --frozen-lockfile
+ENV NODE_ENV=production
+CMD ["bun", "run", "--cwd", "apps/worker", "start"]
