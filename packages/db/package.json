@@ -1,0 +1,17 @@
+{
+  "name": "@linnet/db",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "generate": "drizzle-kit generate",
+    "migrate": "bun --env-file=../../.env src/migrate.ts",
+    "invite": "bun --env-file=../../.env src/invite.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.2",
+    "postgres": "^3.4.5"
+  },
+  "devDependencies": { "drizzle-kit": "^0.31.4" }
+}
