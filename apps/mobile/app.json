@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "Linnet",
+    "slug": "linnet",
+    "scheme": "linnet",
+    "version": "0.1.0",
+    "platforms": ["ios", "android"],
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-router", "expo-secure-store", "expo-notifications"],
+    "experiments": { "typedRoutes": true },
+    "ios": { "bundleIdentifier": "app.linnet.mobile" },
+    "android": { "package": "app.linnet.mobile" }
+  }
+}
