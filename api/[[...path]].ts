@@ -3,7 +3,8 @@ export default {
     let stage = "app";
     try {
       stage = "config";
-      await import("../packages/config/src/index");
+      const { getConfig } = await import("../packages/config/src/index");
+      getConfig();
       stage = "database";
       await import("../packages/db/src/index");
       stage = "authentication";
