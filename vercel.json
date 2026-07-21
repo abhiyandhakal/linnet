@@ -9,7 +9,10 @@
     { "source": "/app/:path*", "destination": "/index.html" }
   ],
   "functions": {
-    "api/[[...path]].ts": { "maxDuration": 60 },
+    "api/[[...path]].ts": {
+      "maxDuration": 60,
+      "includeFiles": ["node_modules/@better-auth/telemetry/dist/node.mjs"]
+    },
     "api/queue.ts": {
       "maxDuration": 300,
       "experimentalTriggers": [{ "type": "queue/v2beta", "topic": "linnet-jobs" }]
