@@ -2,9 +2,10 @@
   "name": "@linnet/worker",
   "version": "0.0.0",
   "type": "module",
-  "scripts": { "dev": "bun --watch src/index.ts", "start": "bun src/index.ts", "typecheck": "tsc -p tsconfig.json", "test": "bun test" },
+  "scripts": { "dev": "bun --env-file=../../.env --watch src/index.ts", "start": "bun --env-file=../../.env src/index.ts", "typecheck": "tsc -p tsconfig.json", "test": "bun test" },
   "dependencies": {
     "@linnet/ai": "workspace:*",
+    "@linnet/api": "workspace:*",
     "@linnet/config": "workspace:*",
     "@linnet/db": "workspace:*",
     "@linnet/domain": "workspace:*",

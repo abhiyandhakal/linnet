@@ -17,10 +17,12 @@ export function assessRisk(input: {
 }
 
 export type OperationKind =
+  | "create_goal_with_plan"
   | "create_action"
   | "complete_action"
   | "block_action"
   | "record_decision"
+  | "record_update"
   | "revise_plan"
   | "schedule_action"
   | "delete_context"

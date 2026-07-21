@@ -4,12 +4,42 @@
     "slug": "linnet",
     "scheme": "linnet",
     "version": "0.1.0",
-    "platforms": ["ios", "android"],
+    "icon": "./assets/linnet-placeholder-icon.png",
+    "splash": {
+      "image": "./assets/linnet-placeholder-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f8f0df"
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "plugins": ["expo-router", "expo-secure-store", "expo-notifications"],
-    "experiments": { "typedRoutes": true },
-    "ios": { "bundleIdentifier": "app.linnet.mobile" },
-    "android": { "package": "app.linnet.mobile" }
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-notifications"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "ios": {
+      "bundleIdentifier": "app.linnet.mobile"
+    },
+    "android": {
+      "package": "app.linnet.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/linnet-placeholder-icon.png",
+        "backgroundColor": "#f8f0df"
+      }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fb65314e-f9be-45b2-b245-221e98c98d09"
+      }
+    },
+    "owner": "mrdhakal"
   }
 }

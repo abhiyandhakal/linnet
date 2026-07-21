@@ -8,3 +8,9 @@ test("blocked work is at risk", () => {
 test("goal abandonment requires confirmation", () => {
   expect(evaluateSecretaryPolicy({ kind: "abandon_goal", payload: {}, rationale: "No longer relevant" }).confirmationRequired).toBe(true);
 });
+
+test("a structured goal plan can be applied automatically", () => {
+  const result = evaluateSecretaryPolicy({ kind: "create_goal_with_plan", payload: { title: "Ship Linnet" }, rationale: "The user described a concrete outcome." });
+  expect(result.allowed).toBe(true);
+  expect(result.confirmationRequired).toBe(false);
+});

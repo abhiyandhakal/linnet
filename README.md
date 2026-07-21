@@ -1,5 +1,21 @@
 # Linnet
 
+Linnet is a plan-first personal secretary: goals stay stable while plans, milestones, and next actions adapt to reality.
+
+## Hosted beta
+
+The Vercel deployment serves the web application and API from one origin:
+
+```text
+https://linnet.abhiyan.me
+  /api/auth/*       Better Auth
+  /api/v1/*         Linnet product API
+  /api/health       process health
+  /api/ready        PostgreSQL readiness
+```
+
+Set the production values in Vercel exactly as documented in [docs/OPERATIONS.md](docs/OPERATIONS.md). The Groq key is server-only; mobile preview builds receive only `EXPO_PUBLIC_API_URL`.
+
 Linnet is a plan-driven personal secretary. Goals and plan revisions are durable; actions, calendar blocks, and daily briefs are the execution layer derived from them.
 
 ## Local development

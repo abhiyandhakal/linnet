@@ -11,7 +11,7 @@ const palette = { paper: "#F8F6F1", panel: "#FFFCF6", ink: "#24231F", muted: "#7
 
 export default function Home() {
   const session = authClient.useSession(); const [capture, setCapture] = useState("");
-  const now = useQuery({ queryKey: ["now"], queryFn: async () => { const { data, error } = await api.v1.now.get(); if (error) throw error; return data; }, retry: false });
+  const now = useQuery({ queryKey: ["now"], queryFn: async () => { const { data, error } = await api.api.v1.now.get(); if (error) throw error; return data; }, retry: false });
   useEffect(() => { void flushOutbox(); if (session.data) void registerPushDevice(); }, [session.data]);
   const submit = useMutation({ mutationFn: async () => { const value = capture.trim(); if (!value) return; const id = await queueCapture(value); await flushOutbox(); setCapture(""); return id; } });
   if (!session.data) return <SafeAreaView style={styles.center}><Text style={styles.wordmark}>linnet</Text><Text style={styles.signInTitle}>Keep your direction close.</Text><Text style={styles.muted}>The private beta is available to invited Google accounts.</Text><Pressable style={styles.primary} onPress={() => authClient.signIn.social({ provider: "google", callbackURL: "/" })}><Text style={styles.primaryText}>Continue with Google</Text></Pressable></SafeAreaView>;

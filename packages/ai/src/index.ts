@@ -5,7 +5,7 @@ export const interpretationSchema = z.object({
   summary: z.string().min(1),
   goalReference: z.string().optional(),
   operations: z.array(z.object({
-    kind: z.enum(["create_action", "complete_action", "block_action", "record_decision", "revise_plan", "schedule_action", "delete_context", "abandon_goal", "external_calendar_change", "send_external_message"]),
+    kind: z.enum(["create_goal_with_plan", "create_action", "complete_action", "block_action", "record_decision", "record_update", "revise_plan", "schedule_action", "delete_context", "abandon_goal", "external_calendar_change", "send_external_message"]),
     targetId: z.string().optional(),
     payload: z.record(z.unknown()),
     rationale: z.string().min(1)
@@ -61,7 +61,7 @@ export class GroqProvider implements ModelProvider {
         temperature: 0.2,
         response_format: { type: "json_object" },
         messages: [
-          { role: "system", content: `You are Linnet's ${role}. Return only a JSON object with summary, optional goalReference, and operations. Operations must be safe proposed operations; never claim they were applied.` },
+          { role: "system", content: `You are Linnet's ${role}. Return only a JSON object with summary, optional goalReference, and operations. For a new outcome use create_goal_with_plan with title, why, optional targetDate, summary, and 3-7 milestones. For a goal update use record_update plus the smallest necessary action or plan revision. Use only concrete operations and never claim they were applied.` },
           { role: "user", content: `Context: ${input.goalContext ?? "none"}\nUpdate: ${input.message}` }
         ]
       })

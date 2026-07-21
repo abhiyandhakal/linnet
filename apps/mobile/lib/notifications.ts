@@ -11,5 +11,5 @@ export async function registerPushDevice() {
   const permission = current.granted ? current : await Notifications.requestPermissionsAsync();
   if (!permission.granted) return;
   const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
-  await api.v1.notifications.devices.post({ token, platform: Platform.OS === "ios" ? "ios" : "android" });
+  await api.api.v1.notifications.devices.post({ token, platform: Platform.OS === "ios" ? "ios" : "android" });
 }

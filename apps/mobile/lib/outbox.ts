@@ -18,7 +18,7 @@ export async function queueCapture(body: string, goalId?: string) {
 export async function flushOutbox() {
   const database = await db(); const rows = await database.getAllAsync<{ id: string; body: string; goal_id: string | null }>("select * from capture_outbox order by created_at");
   for (const row of rows) {
-    const { error } = await api.v1.inbox.post({ body: row.body, goalId: row.goal_id ?? undefined, clientMutationId: row.id });
+    const { error } = await api.api.v1.inbox.post({ body: row.body, goalId: row.goal_id ?? undefined, clientMutationId: row.id });
     if (error) break;
     await database.runAsync("delete from capture_outbox where id = ?", row.id);
   }
