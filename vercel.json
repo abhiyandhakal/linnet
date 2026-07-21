@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "bunVersion": "1.x",
   "installCommand": "bun install --frozen-lockfile",
-  "buildCommand": "bun run --cwd apps/web build",
+  "buildCommand": "node scripts/patch-better-auth-telemetry.mjs && bun run --cwd apps/web build",
   "outputDirectory": "apps/web/dist",
   "rewrites": [
     { "source": "/app", "destination": "/index.html" },
