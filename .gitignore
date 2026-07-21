@@ -10,3 +10,5 @@ apps/mobile/android
 .DS_Store
 coverage
 *.db
+.vercel
+.env*
