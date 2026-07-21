@@ -4,6 +4,7 @@
   "packageManager": "bun@1.2.13",
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
+    "postinstall": "node scripts/patch-better-auth-telemetry.mjs",
     "dev:api": "bun run --cwd apps/api dev",
     "dev:web": "bun run --cwd apps/web dev",
     "dev:worker": "bun run --cwd apps/worker dev",

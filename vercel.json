@@ -11,7 +11,7 @@
   "functions": {
     "api/[[...path]].ts": {
       "maxDuration": 60,
-      "includeFiles": ["node_modules/@better-auth/telemetry/dist/node.mjs"]
+      "includeFiles": "node_modules/@better-auth/**/*"
     },
     "api/queue.ts": {
       "maxDuration": 300,
